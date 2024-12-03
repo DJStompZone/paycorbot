@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "paycorbot"
+version = "1.1.0"
+description = ""
+authors = ["DJ Stomp <85457381+DJStompZone@users.noreply.github.com>"]
+readme = "README.md"
+include = [".env.example", ".gitignore"]
+
+[tool.poetry.dependencies]
+python = "^3.12"
+selenium = "^4.27.1"
+python-dotenv = "^1.0.1"
+webdriver-manager = "^4.0.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

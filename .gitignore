@@ -1,0 +1,9 @@
+.env
+dist/
+build/
+__pycache__/
+poetry_cache/
+*.zip
+*.pyc
+*.pyo
+*.html

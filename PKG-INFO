@@ -1,0 +1,16 @@
+Metadata-Version: 2.1
+Name: paycorbot
+Version: 1.0.2
+Summary: 
+Author: DJ Stomp
+Author-email: 85457381+DJStompZone@users.noreply.github.com
+Requires-Python: >=3.12,<4.0
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.12
+Classifier: Programming Language :: Python :: 3.13
+Requires-Dist: python-dotenv (>=1.0.1,<2.0.0)
+Requires-Dist: selenium (>=4.27.1,<5.0.0)
+Requires-Dist: webdriver-manager (>=4.0.2,<5.0.0)
+Description-Content-Type: text/markdown
+
+# PAYCORBOT
