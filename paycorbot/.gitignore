@@ -1,9 +1,0 @@
-.env
-dist/
-venv/
-.venv/
-poetry_cache/
-__pycache__/
-*.pyc
-*.pyo
-*.json
