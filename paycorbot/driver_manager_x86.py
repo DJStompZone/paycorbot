@@ -7,7 +7,25 @@ from webdriver_manager.microsoft import EdgeChromiumDriverManager
 from webdriver_manager.chrome import ChromeDriverManager
 
 # Temporarily shelved during testing and development
-class DriverManager:
+class X86DriverManager:
+    """
+    X86DriverManager is a class responsible for managing WebDriver initialization for Edge, Chrome, and Chromium browsers on an x86 architecture.
+    Methods:
+        __init__:
+            Initializes the X86DriverManager instance with a driver attribute set to None.
+        get_driver:
+            Raises RuntimeError if all WebDriver initialization attempts fail.
+            Returns the initialized WebDriver instance.
+        _init_edge:
+            Attempts to initialize the Edge WebDriver with specific options.
+            Returns the initialized Edge WebDriver instance or None if initialization fails.
+        _init_chrome:
+            Attempts to initialize the Chrome WebDriver with specific options.
+            Returns the initialized Chrome WebDriver instance or None if initialization fails.
+        _init_chromium:
+            Attempts to initialize the Chromium WebDriver with specific options.
+            Returns the initialized Chromium WebDriver instance or None if initialization fails.
+    """
     def __init__(self):
         self.driver = None
 

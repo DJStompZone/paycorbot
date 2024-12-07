@@ -1,8 +1,9 @@
 
-from flask import Flask, request, render_template_string, redirect, url_for
-from dotenv import set_key, load_dotenv
 import os
 import subprocess
+from flask import Flask, request, render_template_string, redirect, url_for
+from dotenv import set_key, load_dotenv
+
 
 app = Flask(__name__)
 
@@ -46,7 +47,7 @@ def save_credentials():
     """Saves the credentials securely to the .env file."""
     username = request.form.get("username")
     password = request.form.get("password")
-    
+
     if not username or not password:
         return "Error: Username and Password are required!", 400
 

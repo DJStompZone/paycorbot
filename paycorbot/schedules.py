@@ -1,11 +1,24 @@
-import os
 import time
-import json
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
 class SchedulesFetcher:
+    """
+    SchedulesFetcher is a class designed to interact with a web page using Selenium WebDriver to locate and click a 'Schedules' button within iframes, including nested ones.
+    Attributes:
+        driver (WebDriver): The Selenium WebDriver instance used to interact with the web page.
+        level (int): Tracks the current iframe depth.
+    Methods:
+        __init__(driver):
+            Initializes the SchedulesFetcher with a Selenium WebDriver instance.
+        save_frame_source(level):
+            Saves the current iframe's HTML source to a file for debugging purposes.
+        search_in_iframe():
+            Searches for the 'Schedules' button within the current iframe context. If found, clicks the button and captures the schedules JSON. Returns True if the button is found, False otherwise.
+        fetch_schedules():
+            Locates and clicks the 'Schedules' button across all iframes, including nested ones.
+    """
     def __init__(self, driver):
         """
         Initialize the SchedulesFetcher with a Selenium WebDriver instance.
@@ -97,5 +110,14 @@ class SchedulesFetcher:
             raise
 
 def fetch_schedules(driver):
+    """
+    Fetches schedules using the provided web driver.
+
+    Args:
+        driver (WebDriver): The web driver instance used to fetch schedules.
+
+    Returns:
+        None
+    """
     fetcher = SchedulesFetcher(driver)
     fetcher.fetch_schedules()
