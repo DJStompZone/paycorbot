@@ -175,7 +175,7 @@ def handle_shift_parsing_error(e, shift_times, date):
               - 'Start Time': The start time of the shift as a datetime object.
               - 'End Time': The end time of the shift as a datetime object.
               - 'Duration (Hours)': The duration of the shift in hours, rounded to two decimal places.
-              
+
     Raises:
         None: This function handles all exceptions internally and does not raise any.
     """
@@ -232,7 +232,6 @@ def parse_schedule(json_data):
                     result.extend(day_shifts)
     return result
 
-
 class ScheduleDay:
     def __init__(self, date, time, hours):
         self.date = date
@@ -240,7 +239,7 @@ class ScheduleDay:
         self.hours = hours
 
     def __str__(self):
-        return f"Date: {self.date.text}, Time: {self.time.text}, Hours: {self.hours.text}"
+        return f"Date: {date.text}, Time: {time.text}, Hours: {hours.text}"
 
 def parse_raw_markup(page_source):
     soup = BeautifulSoup(page_source, "html.parser")
@@ -256,11 +255,7 @@ def parse_raw_markup(page_source):
                 time = cell.select_one(".indv-sch-sch-sten")
                 hours = cell.select_one(".indv-sch-sch-hrs")
                 if date and time and hours:
-                    days.append(ScheduleDay(date, time, hours))
-    for day in days:
-        print(day)
-
-
+                    days.append(ScheduleD
 
 def output_to_excel(shifts, output_file):
     """

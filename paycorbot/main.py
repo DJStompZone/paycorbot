@@ -11,7 +11,7 @@ from selenium.webdriver import Keys, ActionChains
 from paycorbot.driver_manager import DriverManager
 from paycorbot.schedules import fetch_schedules
 from paycorbot.dom_utils import dismiss_notification
-
+from paycorbot import calendar
 
 def log_step(step_name):
     """
@@ -44,7 +44,7 @@ def handle_step(step_name, func):
         raise
 
 
-def main(driver_manager = None) -> webdriver:
+def _main(driver_manager = None) -> webdriver:
     """
     Main function to automate login and navigation on Paycor's website using Selenium WebDriver.
     This function performs the following steps:
@@ -185,5 +185,10 @@ def main(driver_manager = None) -> webdriver:
     except Exception as e:
         print(f"Error: {e}")
     return driver
-    # finally:
-    #     driver.quit()
+
+
+def main():
+    driver = _main()
+    sauce = driver.page_source
+    calendar.parse_raw_markup(sauce)
+    driver.quit()
