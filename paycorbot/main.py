@@ -12,6 +12,7 @@ from paycorbot.driver_manager import DriverManager
 from paycorbot.schedules import fetch_schedules
 from paycorbot.dom_utils import dismiss_notification
 from paycorbot import calendar
+from paycorbot.banner import banner
 
 def log_step(step_name):
     """
@@ -188,6 +189,8 @@ def _main(driver_manager = None) -> webdriver:
 
 
 def main():
+    print(banner())
+    time.sleep(1)
     driver = _main()
     sauce = driver.page_source
     calendar.parse_raw_markup(sauce)
