@@ -14,13 +14,7 @@ from paycorbot.schedules import fetch_schedules
 from paycorbot.dom_utils import dismiss_notification
 from paycorbot import calendar
 from paycorbot.banner import banner
-
-DEBUG_MODE = os.getenv("PAYCORBOT_DEBUG", False) in [True, "true", "True"]
-
-def log(*args, always = False, **kwargs):
-    if DEBUG_MODE:
-        print(*args, **kwargs)
-
+from paycorbot.log import log
 def log_step(step_name):
     """
     Logs the execution of a step by printing its name.

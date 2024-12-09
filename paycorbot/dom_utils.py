@@ -1,6 +1,7 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from paycorbot.log import log
 
 def dismiss_notification(driver):
     """
@@ -18,6 +19,6 @@ def dismiss_notification(driver):
         )
         if notification_button.text.strip() == "Ok, Got It!":
             notification_button.click()
-            print("Dismissed 'Ok, Got It!' notification.")
+            log("Dismissed 'Ok, Got It!' notification.")
     except Exception:
         pass

@@ -7,5 +7,5 @@ poetry_cache/
 *.pyc
 *.pyo
 *.html
-*
+*.xlsx
 *.save
