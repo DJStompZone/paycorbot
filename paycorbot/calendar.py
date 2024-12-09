@@ -233,6 +233,10 @@ def parse_schedule(json_data):
     return result
 
 
+from bs4 import BeautifulSoup
+import pandas as pd
+from datetime import datetime
+
 class ScheduleDay:
     def __init__(self, date, time, hours):
         self.date = date
@@ -240,9 +244,18 @@ class ScheduleDay:
         self.hours = hours
 
     def __str__(self):
-        return f"Date: {self.date.text}, Time: {self.time.text}, Hours: {self.hours.text}"
+        return f"Date: {self.date}, Time: {self.time}, Hours: {self.hours}"
 
 def parse_raw_markup(page_source):
+    """
+    Parses raw markup and extracts schedule information.
+
+    Args:
+        page_source (str): The HTML page source containing the schedule.
+
+    Returns:
+        list[ScheduleDay]: A list of ScheduleDay objects.
+    """
     soup = BeautifulSoup(page_source, "html.parser")
     schedule_rows = soup.select("div.x-grid-item-container table")
     days = []
@@ -256,23 +269,38 @@ def parse_raw_markup(page_source):
                 time = cell.select_one(".indv-sch-sch-sten")
                 hours = cell.select_one(".indv-sch-sch-hrs")
                 if date and time and hours:
-                    days.append(ScheduleDay(date, time, hours))
-    for day in days:
-        print(day)
-
-
+                    day_date = int(date.text.strip())
+                    day_time = time.text.strip()
+                    day_hours = float(hours.text.strip().replace("h", ""))
+                    days.append(ScheduleDay(day_date, day_time, day_hours))
+    return days
 
 def output_to_excel(shifts, output_file):
     """
     Outputs the shifts to an Excel file.
 
     Args:
-        shifts (list): The list of shift dictionaries.
+        shifts (list[ScheduleDay]): The list of ScheduleDay objects.
         output_file (str): The path to the output Excel file.
     """
-    df = pd.DataFrame(shifts)
-    df['Start Time'] = df['Start Time'].dt.strftime('%Y-%m-%d %I:%M %p')
-    df['End Time'] = df['End Time'].dt.strftime('%Y-%m-%d %I:%M %p')
+    shift_data = []
+    for shift in shifts:
+        time_in, time_out = shift.time.split("/")
+        shift_data.append({
+            "Date": shift.date,
+            "Start Time": time_in,
+            "End Time": time_out,
+            "Hours": shift.hours,
+        })
+
+    df = pd.DataFrame(shift_data)
+
+    df['Start Time'] = df['Date'].astype(str) + " " + df['Start Time']
+    df['End Time'] = df['Date'].astype(str) + " " + df['End Time']
+
+    df['Start Time'] = pd.to_datetime(df['Start Time'], format="%d %I%p", errors="coerce")
+    df['End Time'] = pd.to_datetime(df['End Time'], format="%d %I%p", errors="coerce")
+
     df.to_excel(output_file, index=False)
     print(f"Shifts have been successfully written to {output_file}")
 

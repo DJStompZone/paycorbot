@@ -1,5 +1,4 @@
 import time
-from datetime import datetime as dt
 import os
 from dotenv import load_dotenv
 from selenium import webdriver
@@ -13,13 +12,6 @@ from paycorbot.driver_manager import DriverManager
 from paycorbot.schedules import fetch_schedules
 from paycorbot.dom_utils import dismiss_notification
 from paycorbot import calendar
-from paycorbot.banner import banner
-
-DEBUG_MODE = os.getenv("PAYCORBOT_DEBUG", False) in [True, "true", "True"]
-
-def log(*args, always = False, **kwargs):
-    if DEBUG_MODE:
-        print(*args, **kwargs)
 
 def log_step(step_name):
     """
@@ -28,7 +20,7 @@ def log_step(step_name):
     Args:
         step_name (str): The name of the step being executed.
     """
-    log(f"Executing: {step_name}")
+    print(f"Executing: {step_name}")
 
 
 def handle_step(step_name, func):
@@ -46,9 +38,9 @@ def handle_step(step_name, func):
     try:
         log_step(step_name)
         func()
-        log(f"Step '{step_name}' completed successfully.")
+        print(f"Step '{step_name}' completed successfully.")
     except Exception as e:
-        log(f"Step '{step_name}' failed: {e}", always = True)
+        print(f"Step '{step_name}' failed: {e}")
         raise
 
 
@@ -168,7 +160,7 @@ def _main(driver_manager = None) -> webdriver:
         new_window = [handle for handle in driver.window_handles if handle != original_window][0]
         driver.switch_to.window(new_window)
 
-        log("Switched to the new tab for 'Time & Attendance'.")
+        print("Switched to the new tab for 'Time & Attendance'.")
 
     def navigate_to_schedules():
         time.sleep(3)
@@ -191,16 +183,21 @@ def _main(driver_manager = None) -> webdriver:
         handle_step("Navigate to Schedules section", navigate_to_schedules)
         handle_step("Fetch Schedules JSON", lambda: fetch_schedules(driver))
     except Exception as e:
-        log(f"Unexpected {e.__class__.__name__}: {e}", always = True)
+        print(f"Error: {e}")
     return driver
 
+def banner():
+    import colorama
+    colorama.init()
+    print(
+        colorama.Fore.YELLOW,
+        "\n",
+        __import__("base64").b64decode(
+            b"//6IJYgliCWIJYgliCWIJYgliCWIJYgliCWIJYgliCWIJYgliCWIJYgliCWIJYgliCWIJYgliCWIJYgliCWIJYgliCWIJYgliCWIJYgliCWIJYgliCWIJYgliCWIJYgliCWIJYgliCWIJYgliCWIJYgliCWIJYgliCWIJYgliCWIJYgliCWIJYgliCWIJYgliCUKAIgliCWIJYgliCWIJYgliCWIJYgliCWIJYgliCWIJYgliCWIJYgliCWIJYgliCWIJYgliCWIJYgliCWIJYgliCWIJYgliCWIJYgliCWIJYgliCWIJYgliCWIJYgliCWIJYgliCWIJYgliCWIJYgliCWIJYgliCWIJYgliCWIJYgliCWIJYgliCWIJYgliCWIJQoAiCWIJYgliCWIJYgliCWIJYgliCWIJYgliCWIJYgliCWIJYglkyWTJZMlkyWTJZMlkyWTJZMlkyWTJZMlkyWTJZMlkyWTJZMlkyWTJZMlkyWTJZMlkyWTJZMlkyWTJZMlkyWTJZMlkyWTJZMliCWIJYgliCWIJYgliCWIJYgliCWIJYgliCWIJYgliCWIJYglCgCIJYgliCWIJSAAIAAgACAAIAAgACAAiCWIJZMlIAAgACAAIAAgACAAIAAgAJMlkyWTJSAAIAAgACAAIAAgAJMlkyUgACAAIAAgACAAIAAgACAAkyWTJSAAIAAgACAAIAAgAJMlkyWTJSAAIACTJZMlkyUgACAAiCWIJSAAIAAgACAAIAAgAIgliCWIJYgliCUKAIgliCWIJYglIAAgAIgliCWIJYglIAAgAJMlkyWTJZMlkyWTJSAAIACTJZMlkyWTJSAAIACTJZMlkyWTJZMlkyWTJZMlkyWTJSAAIACTJZMlkyWTJSAAIACTJZMlkyWTJSAAIACTJSAAIAAgAJMlkyUgACAAIACTJSAAIACIJYgliCWIJSAAIACIJYgliCWIJQoAiCWIJYgliCUgACAAiCWIJZMlkyUgACAAkyWTJZMlkyWTJZMlIAAgAJMlkyWTJZMlkyUgACAAIAAgACAAIACTJZMlkyWTJZMlIAAgAJMlkyWTJZMlIAAgAJMlkyWTJZMlIAAgAJMlIAAgACAAIAAgACAAIAAgAJMlIAAgACAAIAAgACAAIACIJYgliCWIJYglCgCIJYgliCWIJSAAIACTJZMlkyWTJSAAIACTJSAAIACTJZMlkyUgACAAkyWTJZIlkiWSJZIlkiWSJZIlkiUgACAAkiWSJZIlkiUgACAAkiWSJZIlkiUgACAAkiWSJZIlkiUgACAAkyUgACAAkyUgACAAkyUgACAAkyUgACAAkyWTJZMlkyWIJYgliCWIJYgliCUKAIgliCWIJYglIAAgACAAIAAgACAAIACTJZMlkyUgACAAIAAgACAAkiWSJZIlkiWSJZIlIAAgACAAIAAgACAAkiWSJZIlkiWSJSAAIACSJZIlkiWSJZIlIAAgACAAIAAgACAAkiWSJSAAIACSJZIlkiWTJSAAIACTJSAAIACTJZMlkyWTJZMlkyWIJYgliCWIJQoAiCWIJZMlkyWTJZMlkyWTJZIlkiWSJZIlkiWSJZIlkiWSJZIlkiWSJZIlkiWSJZIlkiWSJZIlkiWSJZIlkiWSJZIlkiWSJZIlkiWSJZIlkiWSJZIlkiWSJZIlkiWSJZIlkiWSJZIlkiWSJZIlkiWSJZIlkiWSJZIlkiWSJZIlkiWTJZMlkyWTJZMlkyWIJYglCgCIJZMlkyWTJZMlkiWSJZIlkiWSJZIlkiWSJZIlkiWSJZIlkiWSJZIlkSWRJZElkSWRJZElkSWRJZElkSWRJZElkSWRJZElkSWRJZElkSWRJZElkSWRJZElkSWRJZElkSWRJZElkSWRJZIlkiWSJZIlkiWSJZIlkiWSJZIlkiWSJZIlkiWSJZMlkyWTJZMliCUKAJMlkyWTJZIlkiWSJZIlkiWSJZIlkSWRJZElkSWRJZElkSWRJZElkSWRJZElkSWRJZElkSWRJZElIACpAEQASgAgAFMAdABvAG0AcAAgADIAMAAyADQAIACRJZElkSWRJZElkSWRJZElkSWRJZElkSWRJZElkSWRJZElkSWSJZIlkiWSJZIlkiWSJZMlkyWTJQoAkyWTJZIlkiWSJZElkSWRJZElkSWRJZElkSWRJZElkSWRJZElkSWRJZElkSWRJZElkSUgACIATgBvACAAUgBpAGcAaAB0AHMAIABSAGUAcwBlAHIAdgBlAGQAIgAgAJElkSWRJZElkSWRJZElkSWRJZElkSWRJZElkSWRJZElkSWRJZElkSWSJZIlkiWTJZMlCgCTJZIlkiWRJZElkSWRJZElkSWRJZElkSWRJZElkSWRJZElkSWRJZElkSWRJZElkSWRJZElkSWRJZElkSWRJZElkSWRJZElkSWRJZElkSWRJZElkSWRJZElkSWRJZElkSWRJZElkSWRJZElkSWRJZElkSWRJZElkSWRJZElkSWRJZElkSWRJZElkSWSJZIlkyUKAJIlkiWRJZElkSWRJZElkSWRJZElkSWRJZElkSWRJZElkSWRJZElkSWRJZElkSWRJZElkSWRJZElkSWRJZElkSWRJZElkSWRJZElkSWRJZElkSWRJZElkSWRJZElkSWRJZElkSWRJZElkSWRJZElkSWRJZElkSWRJZElkSWRJZElkSWRJZElkSWRJZElkiWSJQoA"
+        ).decode("u16"), colorama.Style.RESET_ALL, sep="")
 
 def main():
-    now = dt.now()
-    print(banner())
-    time.sleep(1)
     driver = _main()
     sauce = driver.page_source
-    days = calendar.parse_raw_markup(sauce)
-    calendar.output_to_excel(days, f"shifts_{now.strftime('%B%Y')}.xlsx")
+    calendar.parse_raw_markup(sauce)
     driver.quit()
