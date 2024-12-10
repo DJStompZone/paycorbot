@@ -12,7 +12,7 @@ from selenium.webdriver import Keys, ActionChains
 from paycorbot.driver_manager import DriverManager
 from paycorbot.schedules import fetch_schedules
 from paycorbot.dom_utils import dismiss_notification
-from paycorbot import calendar
+from paycorbot import schedule_calendar
 from paycorbot.banner import banner
 from paycorbot.log import log
 def log_step(step_name):
@@ -195,6 +195,6 @@ def main():
     time.sleep(1)
     driver = _main()
     sauce = driver.page_source
-    days = calendar.parse_raw_markup(sauce)
-    calendar.output_to_excel(days, f"shifts_{now.strftime('%B%Y')}.xlsx")
+    days = schedule_calendar.parse_raw_markup(sauce)
+    schedule_calendar.output_to_excel(days, f"shifts_{now.strftime('%B%Y')}.xlsx")
     driver.quit()
