@@ -4,6 +4,10 @@ import sys
 from datetime import datetime, timedelta
 from bs4 import BeautifulSoup
 import pandas as pd
+from openpyxl import load_workbook
+from openpyxl.styles import Alignment, Font
+from openpyxl.utils import get_column_letter
+
 
 def standardize_time_str(time_str):
     """Standardizes a time string to a uniform format for parsing."""
@@ -119,11 +123,10 @@ def parse_shift_times(shift_times, date):
         return None
 
 
-from openpyxl import load_workbook
-from openpyxl.styles import Alignment, Font
-from openpyxl.utils import get_column_letter
 
 def format_excel(file_path):
+    """Formats the Excel file with specific date, time, and number styles."""
+    # Load workbook and active sheet
     wb = load_workbook(file_path)
     ws = wb.active
 
@@ -133,8 +136,19 @@ def format_excel(file_path):
 
     for row in ws.iter_rows():
         for cell in row:
-            cell.alignment = Alignment(horizontal="left", vertical="center")
-
+            cell.alignment = Alignment(horizontal="center", vertical="center")
+    for row_idx, row in enumerate(ws.iter_rows(min_row=2), start=2):
+        for col_idx, cell in enumerate(row, start=1):
+            col_letter = get_column_letter(col_idx)
+            if col_idx == 1:
+                if isinstance(cell.value, (datetime, str)):
+                    cell.number_format = "dddd, mmmm d\"th\", yyyy"
+            elif col_idx in [2, 3]:  # Second and Third columns: "4:20 PM"
+                if isinstance(cell.value, (datetime, str)):
+                    cell.number_format = "h:mm AM/PM"
+            elif col_idx == 4:  # Fourth column: 2.00
+                if isinstance(cell.value, (int, float)):
+                    cell.number_format = "0.00"
     for col in ws.columns:
         max_length = 0
         col_letter = get_column_letter(col[0].column)
@@ -146,10 +160,10 @@ def format_excel(file_path):
                 pass
         adjusted_width = max_length + 2
         ws.column_dimensions[col_letter].width = adjusted_width
-
     formatted_file_path = file_path.replace(".xlsx", "_formatted.xlsx")
     wb.save(formatted_file_path)
     print(f"Formatted file saved as: {formatted_file_path}")
+
 
 def output_to_excel(shifts, output_file):
     """Outputs the shifts to an Excel file."""
